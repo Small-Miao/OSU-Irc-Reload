@@ -25,14 +25,7 @@ namespace OSU_Irc_Reload
         {//私聊信息
             string msg = "[" + System.DateTime.Now + "私聊" + "]" + e.Data.Nick + ":" + e.Data.Message;
             messageList.Add(msg);
-            const int kScreenHeight = 20;
-            int kShowMax = messageList.Count > kScreenHeight ? kScreenHeight : messageList.Count;
-            int cur = messageList.Count - kShowMax;
-            for (int line = 0; line < kShowMax; line++, cur++)
-            {
-                Console.SetCursorPosition(0, line);
-                Console.WriteLine(messageList[cur]);
-            }
+            this.RefreshMessageList();
         }
         private void IRC_OnQueryAction(object sender, ActionEventArgs e)
         {
@@ -43,7 +36,12 @@ namespace OSU_Irc_Reload
             //频道信息
             string msg = "[" + System.DateTime.Now + "私聊" + "]" + e.Data.Nick + ":" + e.Data.Message;
             messageList.Add(msg);
+            this.RefreshMessageList();
 
+
+        }
+        private void RefreshMessageList()
+        {//输出列表刷新
             const int kScreenHeight = 20;
             int kShowMax = messageList.Count > kScreenHeight ? kScreenHeight : messageList.Count;
             int cur = messageList.Count - kShowMax;
