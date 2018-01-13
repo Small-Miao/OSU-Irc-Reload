@@ -74,7 +74,7 @@ namespace OSU_Irc_Reload
             }
         }
         public bool Login(string User,string Password)
-        {   //登录
+        {   //登录=
             try
             {
                 Console.WriteLine("登录成功");
