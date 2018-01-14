@@ -10,10 +10,12 @@ namespace OSU_Irc_Reload
 {
     class Irc
     {
-         public static IrcClient IRC = new IrcClient();
+        public static IrcClient IRC = new IrcClient();
         private static Thread _ListenThread;
-        Program program = new Program();    
+        Program program = new Program();
         List<String> messageList = new List<String>();
+        private string Addres = "irc.ppy.sh";
+        private int Port = 6667;
         public Irc()
         {//基础设定
             IRC.Encoding = Encoding.UTF8;
@@ -24,6 +26,7 @@ namespace OSU_Irc_Reload
         private void IRC_OnQueryMessage(object sender, IrcEventArgs e)
         {//私聊信息
             string msg = "[" + System.DateTime.Now + "私聊" + "]" + e.Data.Nick + ":" + e.Data.Message;
+            messageList.Add("                                                                                                                       ");
             messageList.Add(msg);
             this.RefreshMessageList();
         }
@@ -34,11 +37,22 @@ namespace OSU_Irc_Reload
         private void IRC_OnChannelMessage(object sender, IrcEventArgs e)
         {
             //频道信息
-            string msg = "[" + System.DateTime.Now + "私聊" + "]" + e.Data.Nick + ":" + e.Data.Message;
-            messageList.Add(msg);
+            string msg = "[" + System.DateTime.Now + e.Data.Channel + "]" + e.Data.Nick + ":" + e.Data.Message;
+            
+            messageList.Add(msg+"                                                   ");
             this.RefreshMessageList();
 
 
+        }
+        public void RefreshMessageListLoad()
+        {
+            for (int i = 0; i < 21; i++)
+            {
+                string b = Convert.ToString(i)+"屏幕重载中                                                                     ";
+                messageList.Add(b);
+                this.RefreshMessageList();
+            }
+            
         }
         private void RefreshMessageList()
         {//输出列表刷新
@@ -51,11 +65,11 @@ namespace OSU_Irc_Reload
                 Console.WriteLine(messageList[cur]);
             }
         }
-        public bool Connect(string addrest , int Port)
+        public bool Connect()
         {   //服务器连接
             try
             {
-                IRC.Connect(addrest, Port);
+                IRC.Connect(this.Addres, this.Port);
                 Console.WriteLine("服务器连接成功");
                 return true;
             }
@@ -87,7 +101,7 @@ namespace OSU_Irc_Reload
             }
            
         }
-        public static void send(string message, string Chanl)
+        public void Send(string message, string Chanl)
         {
             //发送频道消息
             IRC.SendMessage(SendType.Message, Chanl, message);
@@ -123,6 +137,10 @@ namespace OSU_Irc_Reload
                 return false;
                
             } 
+        }
+        public void ThredStop()
+        {//停止线程
+            _ListenThread.Abort();
         }
        
         public void IRCThread()
